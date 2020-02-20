@@ -45,16 +45,17 @@ function createMenu() {
 }
 
 function CreateHostAddWindow(){
-  const connectWin = new BrowserWindow({
-    width: 400,
+  const hostWin = new BrowserWindow({
+    width: 450,
     height: 400,
     webPreferences: {
       nodeIntegration: true
     }
   })
-  connectWin.loadFile('src/addHost.html')
-  connectWin.setTitle("Add Host");
-  connectWin.removeMenu()
+  hostWin.loadFile('src/addHost.html')
+  hostWin.removeMenu();
+  hostWin.setTitle("Add Host");
+
 }
 
 function createConnectWindow() {
