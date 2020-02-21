@@ -1,8 +1,12 @@
-const { app, BrowserWindow, Menu,Tray } = require('electron')
-const electron =require('electron')
+const { app, BrowserWindow, Menu, ipcMain } = require('electron')
+const electron = require('electron')
 const path = require('path');
+const dbBridge = require('./dbBridge')
 
-var mainWindow
+let mainWindow;
+let hostWin;
+let connectWin;
+
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -12,17 +16,12 @@ function createWindow() {
       nodeIntegration: true
     }
   })
-  mainWindow.loadFile('index.html')
+  mainWindow.loadFile('src/index.html')
   mainWindow.setThumbarButtons([
 
     {
       tooltip: 'connect',
-      icon:  electron.nativeImage.createFromPath(path.join(__dirname, 'connect.jpg')),
-      click() { console.log('button1 clicked') }
-    },
-    {
-      tooltip: 'connect',
-      icon:  electron.nativeImage.createFromPath(path.join(__dirname, 'connect2.png')),
+      icon: path.join(__dirname, 'connect2.png'),
       click() { console.log('button1 clicked') }
     }
   ])
@@ -33,19 +32,32 @@ function createWindow() {
     mainWindow.show()
     mainWindow.focus()
   })
-  mainWindow.maximize()
-  
- 
-  //mainWindow.webContents.openDevTools()
+ // mainWindow.webContents.openDevTools()
 }
+app.whenReady().then(() => {
+  createWindow()
+  createMenu()
+})
+app.on('window-all-closed', () => {
+
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+})
+app.on('activate', () => {
+
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow()
+  }
+})
 
 function createMenu() {
   const menu = Menu.buildFromTemplate(menuItemsTemplate)
   Menu.setApplicationMenu(menu)
 }
 
-function CreateHostAddWindow(){
-  const hostWin = new BrowserWindow({
+function CreateHostAddWindow() {
+  hostWin = new BrowserWindow({
     width: 450,
     height: 400,
     webPreferences: {
@@ -55,11 +67,12 @@ function CreateHostAddWindow(){
   hostWin.loadFile('src/addHost.html')
   hostWin.removeMenu();
   hostWin.setTitle("Add Host");
+  // hostWin.webContents.openDevTools();
 
 }
 
 function createConnectWindow() {
-  const connectWin = new BrowserWindow({
+  connectWin = new BrowserWindow({
     width: 700,
     height: 600,
     webPreferences: {
@@ -70,41 +83,40 @@ function createConnectWindow() {
   connectWin.setTitle("Connect");
   const connectMenuTemplate = [
     {
-      label:"Create",
-      click(){
+      label: "Create",
+      click() {
         CreateHostAddWindow()
       }
     },
     {
-      label:"Remove"
+      label: "Remove"
     }
   ]
   const menu = Menu.buildFromTemplate(connectMenuTemplate)
   connectWin.setMenu(menu)
-
+ // connectWin.webContents.openDevTools();
 
 }
 
-app.whenReady().then(() => {
-  createWindow()
-  createMenu()
+
+ipcMain.on('item:host', (e, item) => {
+  console.log(item)
+  connectWin.webContents.send('item:host', item)
+  hostWin.close();
+})
+
+ipcMain.on('item:connect', (e, item) => {
+  console.log(".............connecting...............");
+  dbBridge.getAllDataBases().then(dbs => {
+
+    console.log("Got the result")
+    mainWindow.webContents.send('item:connect', dbs)
+    connectWin.close();
+
+  })
 })
 
 
-
-app.on('window-all-closed', () => {
-
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
-
-app.on('activate', () => {
-
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow()
-  }
-})
 menuItemsTemplate = [
   {
     label: "File",

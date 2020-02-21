@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="../assets/css/addHost.css">
+    <script src="addHost.js"></script>
 </head>
 
 <body>
@@ -31,7 +32,7 @@
                     <label for="">Name</label>
                 </div>
                 <div class="col-10">
-                    <input class="remWidth" type="text" name="name" value="New Host">
+                    <input class="remWidth" type="text" name="name" id="name" value="New Host">
         
                 </div>
             </div>
@@ -41,8 +42,8 @@
                     <label for="">Address</label>
                 </div>
                 <div class="col-10">
-                    <input class="host" type="text" name="host" placeholder="host">
-                    <input type="number" name="port" placeholder="port">
+                    <input class="host" type="text" name="host" placeholder="host" id="host">
+                    <input type="number" name="port" placeholder="port" id="port">
                 </div>
                 
             </div>
@@ -53,7 +54,7 @@
             </div>
             <div class="btsRight">
                 <button>Cancel</button>
-                <button>Save</button>
+                <button onclick="saveHost()">Save</button>
 
             </div>
         </div>
