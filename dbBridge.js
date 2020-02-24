@@ -15,7 +15,7 @@ function getAllDataBases() {
     })
 }
 
-function getCollections(database){
+function getCollections(database) {
     return new Promise((resolve, reject) => {
         connect().then(client => {
             client.db(database).collections({ listCollections: 1.0 }).then(collections => {
@@ -62,5 +62,5 @@ function connect() {
 }
 
 module.exports = {
-    connect, getAllDataBases,getCollections
+    connect, getAllDataBases, getCollections
 }

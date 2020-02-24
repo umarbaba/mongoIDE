@@ -18,7 +18,6 @@ function createWindow() {
   })
   mainWindow.loadFile('src/index.html')
   mainWindow.setThumbarButtons([
-
     {
       tooltip: 'connect',
       icon: path.join(__dirname, 'connect2.png'),
