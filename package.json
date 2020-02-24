@@ -47,6 +47,7 @@
     "electron-builder": "^20.44.4"
   },
   "dependencies": {
+    "electron-tree-view": "^1.1.0",
     "mongodb": "^3.5.3",
     "path": "^0.12.7"
   }

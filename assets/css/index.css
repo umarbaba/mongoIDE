@@ -1,0 +1,12 @@
+.container {
+    display: grid;
+    width: 100%;
+    height: calc(100vh - 25px);
+    grid-template-columns: auto 1fr;
+}
+.sidebar {
+    padding: 20px;
+    background: #e7efef;
+    min-width: 200px;
+    border: 1px solid #bdb9b9;
+}
