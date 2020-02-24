@@ -1,7 +1,7 @@
 const { app, BrowserWindow, Menu, ipcMain } = require('electron')
 const electron = require('electron')
 const path = require('path');
-const dbBridge = require('./dbBridge')
+const businessLogic = require('./businessLogic')
 
 let mainWindow;
 let hostWin;
@@ -32,7 +32,7 @@ function createWindow() {
     mainWindow.show()
     mainWindow.focus()
   })
- // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 }
 app.whenReady().then(() => {
   createWindow()
@@ -94,7 +94,7 @@ function createConnectWindow() {
   ]
   const menu = Menu.buildFromTemplate(connectMenuTemplate)
   connectWin.setMenu(menu)
- // connectWin.webContents.openDevTools();
+  // connectWin.webContents.openDevTools();
 
 }
 
@@ -107,13 +107,13 @@ ipcMain.on('item:host', (e, item) => {
 
 ipcMain.on('item:connect', (e, item) => {
   console.log(".............connecting...............");
-  dbBridge.getAllDataBases().then(dbs => {
 
-    console.log("Got the result")
-    mainWindow.webContents.send('item:connect', dbs)
-    connectWin.close();
-
+  businessLogic.getAllDBSWithCollection().then(dbsWithCollections => {
+    mainWindow.webContents.send('item:connect', dbsWithCollections)
   })
+  connectWin.close();
+
+
 })
 
 

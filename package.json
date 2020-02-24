@@ -4,37 +4,8 @@
   "description": "Studio to access & manipulate mongoDB",
   "main": "main.js",
   "scripts": {
-    "postinstall": "install-app-deps",
-    "start": "npm install && electron ./app",
-    "pack": "electron-builder --dir",
-    "package": "electron-builder"
-  },
-  "build": {
-    "appId": "com.psarkar.com",
-    "dmg": {
-      "contents": [
-        {
-          "x": 110,
-          "y": 150
-        },
-        {
-          "x": 240,
-          "y": 150,
-          "type": "link",
-          "path": "/Applications"
-        }
-      ]
-    },
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ]
-    },
-    "win": {
-      "target": "NSIS",
-      "icon": "build/icon.ico"
-    }
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
   },
   "repository": {
     "type": "git",
@@ -43,8 +14,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^8.0.1",
-    "electron-builder": "^20.44.4"
+    "electron": "^8.0.1"
   },
   "dependencies": {
     "mongodb": "^3.5.3",

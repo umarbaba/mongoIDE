@@ -6,9 +6,20 @@ var client = null
 
 function getAllDataBases() {
     return new Promise((resolve, reject) => {
-        connect().then(db => {
-            db.executeDbAdminCommand({ listDatabases: 1 }).then(dbs => {
+        connect().then(client => {
+            client.db("admin").executeDbAdminCommand({ listDatabases: 1 }).then(dbs => {
                 return resolve(dbs)
+            })
+        })
+
+    })
+}
+
+function getCollections(database){
+    return new Promise((resolve, reject) => {
+        connect().then(client => {
+            client.db(database).collections({ listCollections: 1.0 }).then(collections => {
+                return resolve(collections)
             })
         })
 
@@ -30,7 +41,7 @@ function connect() {
                         connectTimeoutMS: 5 * 1000
                     });
                     console.log('DB Connected!')
-                    return resolve(client.db("admin"))
+                    return resolve(client)
                 }
                 catch (e) {
                     client = null;
@@ -45,11 +56,11 @@ function connect() {
             }
         }
         else {
-            return resolve(client.db(dbName))
+            return resolve(client)
         }
     })
 }
 
 module.exports = {
-    connect, getAllDataBases
+    connect, getAllDataBases,getCollections
 }
