@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "postinstall": "install-app-deps",
-    "start": "electron --inspect-brk .",
+    "start": "electron .",
     "pack": "electron-builder --dir",
     "package": "electron-builder"
   },

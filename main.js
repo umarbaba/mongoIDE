@@ -31,7 +31,7 @@ function createWindow() {
     mainWindow.show()
     mainWindow.focus()
   })
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
 }
 app.whenReady().then(() => {
   createWindow()
@@ -66,7 +66,7 @@ function CreateHostAddWindow() {
   hostWin.loadFile('src/addHost.html')
   hostWin.removeMenu();
   hostWin.setTitle("Add Host");
-  // hostWin.webContents.openDevTools();
+  //hostWin.webContents.openDevTools();
 
 }
 
@@ -107,13 +107,21 @@ ipcMain.on('item:host', (e, item) => {
 ipcMain.on('item:connect', (e, item) => {
   console.log(".............connecting...............");
 
-  businessLogic.getAllDBSWithCollection().then(dbsWithCollections => {
-    mainWindow.webContents.send('item:connect', dbsWithCollections)
+  businessLogic.getInitData().then(serverData => {
+    mainWindow.webContents.send('item:connect', serverData)
   })
   connectWin.close();
 
 
 })
+
+ipcMain.on('item:getDbDetails', (e, dbName) => {
+  businessLogic.getDbDetails(dbName).then(details=>{
+    mainWindow.webContents.send('item:dbDetails', details)
+  })
+
+})
+
 
 
 menuItemsTemplate = [

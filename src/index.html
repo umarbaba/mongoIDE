@@ -16,12 +16,41 @@
 
     </div>
     <div class="mainData">
-      <ul></ul>
+      <div class="container">
+        <div class="dbName looks">
+          <div id="selectedDbName"></div>
+          <label class="componentLabel">database selected</label>
+        </div>
+        <div class="noOfConnection looks">
+          <div id="activeConnections"></div>
+          <label class="componentLabel">active connections</label>
+        </div>
+        <div class="simpleStatus looks">
+          <table>
+            <tr>
+              <td>No of collections</td>
+              <td id="noOFCollection"></td>
+            </tr>
+            <tr>
+              <td>Total size occupied</td>
+              <td id="totalSizeOccupied"></td>
+            </tr>
+            <tr>
+              <td>No of documents</td>
+              <td id="noOfDocuments"></td>
+            </tr>
+            <tr>
+              <td>DB version</td>
+              <td id="dbVersion"></td>
+            </tr>
+          </table>
+        </div>
+        <div class="bottomControl">
+          <button>Explore</button>
+        </div>
+      </div>
     </div>
   </div>
-  <ul>
-
-  </ul>
 </body>
 
 </html>

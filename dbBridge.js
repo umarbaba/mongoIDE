@@ -6,12 +6,9 @@ var client = null
 
 function getAllDataBases() {
     return new Promise((resolve, reject) => {
-        connect().then(client => {
-            client.db("admin").executeDbAdminCommand({ listDatabases: 1 }).then(dbs => {
-                return resolve(dbs)
-            })
+        executeDbAdminCommand({ listDatabases: 1 }).then(dbs => {
+            return resolve(dbs)
         })
-
     })
 }
 
@@ -20,6 +17,28 @@ function getCollections(database) {
         connect().then(client => {
             client.db(database).collections({ listCollections: 1.0 }).then(collections => {
                 return resolve(collections)
+            })
+        })
+    })
+}
+
+function getDbStats(dbName) {
+    return new Promise((resolve, reject) => {
+        connect().then(client => {
+            client.db(dbName).stats().then(stats => {
+                return resolve(stats)
+            })
+        })
+    })
+}
+
+
+
+function executeDbAdminCommand(query,dbName='admin'){
+    return new Promise((resolve, reject) => {
+        connect().then(client => {
+            client.db(dbName).executeDbAdminCommand(query).then(result => {
+                return resolve(result)
             })
         })
 
@@ -62,5 +81,5 @@ function connect() {
 }
 
 module.exports = {
-    connect, getAllDataBases, getCollections
+    connect, getAllDataBases, getCollections,executeDbAdminCommand,getDbStats
 }
