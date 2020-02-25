@@ -2,7 +2,7 @@
   "name": "MongoIED",
   "version": "1.0.2",
   "description": "Studio to access & manipulate mongoDB",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
     "postinstall": "install-app-deps",
     "start": "electron .",
@@ -49,6 +49,8 @@
   "dependencies": {
     "electron-tree-view": "^1.1.0",
     "mongodb": "^3.5.3",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "pouchdb-find": "^7.2.1",
+    "pouchdb-node": "^7.2.1"
   }
 }
