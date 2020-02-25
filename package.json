@@ -1,6 +1,6 @@
 {
-  "name": "mongo_studio",
-  "version": "1.0.1",
+  "name": "MongoIED",
+  "version": "1.0.2",
   "description": "Studio to access & manipulate mongoDB",
   "main": "main.js",
   "scripts": {
