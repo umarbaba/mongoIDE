@@ -19,13 +19,13 @@ function createWindow() {
     }
   })
   mainWindow.loadFile('src/dashboard/index.html')
-/*   mainWindow.setThumbarButtons([
-    {
-      tooltip: 'connect',
-      icon: path.join(__dirname, 'connect2.png'),
-      click() { console.log('button1 clicked') }
-    }
-  ]) */
+  /*   mainWindow.setThumbarButtons([
+      {
+        tooltip: 'connect',
+        icon: path.join(__dirname, 'connect2.png'),
+        click() { console.log('button1 clicked') }
+      }
+    ]) */
   mainWindow.on('closed', () => {
     app.quit()
   })
@@ -33,7 +33,7 @@ function createWindow() {
     mainWindow.show()
     mainWindow.focus()
   })
-  //mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 }
 app.whenReady().then(() => {
   createWindow()
@@ -95,7 +95,7 @@ function createConnectWindow() {
   ]
   const menu = Menu.buildFromTemplate(connectMenuTemplate)
   connectWin.setMenu(menu)
-//  connectWin.webContents.openDevTools();
+  //  connectWin.webContents.openDevTools();
 
 }
 
@@ -107,10 +107,10 @@ ipcMain.on('item:host', (e, item) => {
 })
 
 
-ipcMain.on('item:connect', (event,connectDetails) => {
+ipcMain.on('item:connect', (event, connectDetails) => {
   dbBridge.setConnectDetails(connectDetails)
   businessLogic.getInitData().then(serverData => {
-    mainWindow.webContents.send('item:connect', {serverData,connectionName:connectDetails.name})
+    mainWindow.webContents.send('item:connect', { serverData, connectionName: connectDetails.name })
   })
   connectWin.close();
 
@@ -123,6 +123,13 @@ ipcMain.on('item:getDbDetails', (e, dbName) => {
   })
 })
 
+ipcMain.on('item:getCollectionData', (e, node) => {
+  businessLogic.getCollectionData(node).then(collectionData => {
+    mainWindow.webContents.send('item:collectionData', { collectionData, node })
+  })
+})
+
+
 ipcMain.on('storage:addNewConnection', (e, conObj) => {
   storage.addNewConnection(conObj).then(_ => {
     hostWin.close();
@@ -132,6 +139,11 @@ ipcMain.on('storage:addNewConnection', (e, conObj) => {
   });
 })
 
+ipcMain.on('item:query', (e, query) => {
+  businessLogic.executeQuery(query).then(result=>{
+    mainWindow.webContents.send('main:queryResult',result)
+  })
+})
 
 
 

@@ -1,5 +1,5 @@
 {
-  "name": "MongoIED",
+  "name": "MongoIDE",
   "version": "1.0.2",
   "description": "Studio to access & manipulate mongoDB",
   "main": "src/main.js",
@@ -40,7 +40,7 @@
     "type": "git",
     "url": "https://github.com/umarbaba/mongoIDE.git"
   },
-  "author": "",
+  "author": "umar/pranoy",
   "license": "ISC",
   "devDependencies": {
     "electron": "^8.0.1",
@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "electron-tree-view": "^1.1.0",
+    "monaco-editor": "^0.20.0",
     "mongodb": "^3.5.3",
     "path": "^0.12.7",
     "pouchdb-find": "^7.2.1",

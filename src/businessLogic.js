@@ -63,6 +63,22 @@ function getCollections(dbName) {
     })
 }
 
+function getCollectionData(node) {
+    return new Promise((resolve, reject) => {
+        let dbName = node.dbName
+        let collectionName = node.name;
+        dbBridge.getCollectionData(dbName, collectionName).then(collectionData => {
+            resolve(collectionData)
+        })
+    })
+}
+
+function executeQuery(query){
+    return new Promise((resolve, reject) => {
+        resolve(query)        
+    })
+}
+
 module.exports = {
-    getInitData,getDbDetails
+    getInitData,getDbDetails,getCollectionData,executeQuery
 }
