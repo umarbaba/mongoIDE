@@ -3,6 +3,7 @@ const electron = require('electron');
 const tree = require('electron-tree-view')
 
 let sideBarTree = {}
+var editor = null
 
 electron.ipcRenderer.on("item:connect", (e, serverDetails) => {
     displayTree(serverDetails.serverData.dbsWithCollections, serverDetails.connectionName)
@@ -13,9 +14,18 @@ electron.ipcRenderer.on("item:dbDetails", (e, dbDetails) => {
     populateDbStatus(dbDetails)
 })
 
+electron.ipcRenderer.on("item:collectionData", (e, collectionData) => {
+    console.log(collectionData)
+    displayEditor(collectionData.node)
+    displayTable(collectionData.collectionData)
+})
+
+electron.ipcRenderer.on('main:queryResult',(e, result)=>{
+    console.log(result);
+})
+
 
 function displayTree(treeData, connectionName) {
-
     let root = {}
     root.name = connectionName;
     root.children = [];
@@ -25,7 +35,7 @@ function displayTree(treeData, connectionName) {
         let collectionArray = []
         db.collections.forEach(collection => {
             let collectionName = collection.s.namespace.collection
-            collectionArray.push({ name: collectionName, children: [] })
+            collectionArray.push({ name: collectionName, dbName: db.dbName, host: root.name, type: "collection", children: [] })
         })
         let tempObj = {}
         tempObj.name = db.dbName
@@ -44,6 +54,11 @@ function displayTree(treeData, connectionName) {
         if (node.type === 'db') {
             electron.ipcRenderer.send("item:getDbDetails", node.name)
         }
+        else if (node.type === 'collection') {
+            electron.ipcRenderer.send("item:getCollectionData", node)
+
+        }
+
     })
 
     // electron.ipcRenderer.send("item:getcollectionsOfDBs",dbs)
@@ -70,19 +85,94 @@ function toHumanReadableSize(sizeInBytes) {
     let gb = mb * 1024;
     let tb = gb * 1024;
     if (sizeInBytes > tb) {
-        sizeInBytes = (sizeInBytes/tb).toFixed(2)+' TB'
+        sizeInBytes = (sizeInBytes / tb).toFixed(2) + ' TB'
     }
     else if (sizeInBytes > gb) {
-        sizeInBytes = (sizeInBytes/gb).toFixed(2)+' GB'
+        sizeInBytes = (sizeInBytes / gb).toFixed(2) + ' GB'
     }
     else if (sizeInBytes > mb) {
-        sizeInBytes = (sizeInBytes/mb).toFixed(2)+' MB'
+        sizeInBytes = (sizeInBytes / mb).toFixed(2) + ' MB'
     }
     else if (sizeInBytes > kb) {
-        sizeInBytes = (sizeInBytes/kb).toFixed(2)+' KB'
+        sizeInBytes = (sizeInBytes / kb).toFixed(2) + ' KB'
     }
-    else{
-        sizeInBytes = Math.ceil(sizeInBytes)+ ' Bytes'
+    else {
+        sizeInBytes = Math.ceil(sizeInBytes) + ' Bytes'
     }
     return sizeInBytes;
+}
+
+
+function displayEditor(data) {
+    document.querySelector("#hostDetails").style.display = "none"
+    const path = require('path');
+    const amdLoader = require('../../node_modules/monaco-editor/min/vs/loader.js');
+    const amdRequire = amdLoader.require;
+    const amdDefine = amdLoader.require.define;
+
+    function uriFromPath(_path) {
+        var pathName = path.resolve(_path).replace(/\\/g, '/');
+        if (pathName.length > 0 && pathName.charAt(0) !== '/') {
+            pathName = '/' + pathName;
+        }
+        return encodeURI('file://' + pathName);
+    }
+
+    amdRequire.config({
+        baseUrl: uriFromPath(path.join(__dirname, '../../node_modules/monaco-editor/min'))
+    });
+
+    self.module = undefined;
+
+    amdRequire(['vs/editor/editor.main'], function () {
+        if (editor == null) {
+            editor = monaco.editor.create(document.getElementById('query'), {
+                value: "db.collection(\'" + data.name + "\').find({})",
+                language: 'javascript',
+                lineNumbers: "off",
+                roundedSelection: false,
+                scrollBeyondLastLine: false,
+                readOnly: false,
+                theme: "vs-dark",
+            });
+        }
+        else {
+            editor.value = "db.collection('" + data.name + "').find({})"
+        }
+    });
+}
+
+
+function displayTable(collectionData) {
+    let data = document.getElementById("data")
+    data.innerHTML = ""
+    let table = document.createElement("table")
+    let tr = document.createElement("tr")
+
+
+
+    Object.keys(collectionData[0]).forEach(key => {
+        let th = document.createElement("th")
+        th.innerText = key
+        tr.appendChild(th);
+    })
+    table.appendChild(tr)
+
+    collectionData.forEach(entry => {
+        tr = document.createElement("tr")
+        Object.keys(entry).forEach(function (key) {
+            let td = document.createElement("td")
+            td.innerText = entry[key];
+            tr.appendChild(td)
+        });
+        table.appendChild(tr)
+    })
+    data.appendChild(table)
+}
+
+function runQuery(){
+    let query= editor.value;
+    
+    electron.ipcRenderer.send("item:query",query)
+
 }

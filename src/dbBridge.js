@@ -45,6 +45,37 @@ function executeDbAdminCommand(query, dbName = 'admin') {
 
     })
 }
+
+function getCollectionData(dbName, collectionName, query = {}, projection = undefined) {
+    return new Promise((resolve, reject) => {
+        connect().then(client => {
+            let result = client.db(dbName).collection(collectionName).find(query);
+            if (projection != undefined) {
+                result = result.project(projection)
+            }
+            getArray(result).then(result => {
+                return resolve(result)
+            }).catch(err => {
+                return reject(err)
+            })
+
+        })
+    })
+}
+
+function getArray(iterator) {
+    return new Promise((resolve, reject) => {
+        iterator.toArray((err, res) => {
+            if (err) {
+                return reject(err);
+            }
+            else {
+                return resolve(res);
+            }
+        })
+    })
+}
+
 function connect() {
     return new Promise(async (resolve, reject) => {
 
@@ -86,5 +117,5 @@ function setConnectDetails(conDetails) {
 }
 
 module.exports = {
-    connect, getAllDataBases, getCollections, executeDbAdminCommand, getDbStats, setConnectDetails
+    connect, getAllDataBases, getCollections, executeDbAdminCommand, getDbStats, setConnectDetails,getCollectionData
 }
