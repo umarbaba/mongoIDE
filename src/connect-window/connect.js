@@ -5,16 +5,18 @@ const electron = require('electron');
     console.log("item in connect page ",item)
     addHost(item)
 }) */
-
+let allConnections = null;
 
 electron.ipcRenderer.on("connect:updateHostList", (e, connectionObjects) => {
-    addHosts(connectionObjects)
+    addHosts(connectionObjects);
+
+    allConnections = connectionObjects;
 })
-electron.ipcRenderer.send("storage:getAllConnections",{})
+electron.ipcRenderer.send("storage:getAllConnections", {})
 
 function addHosts(connectionObjects) {
     let tableBody = document.querySelector("#connectionTableBody");
-    tableBody.innerHTML='';
+    tableBody.innerHTML = '';
     // addTableHeader(table) 
 
     connectionObjects.forEach(connection => {
@@ -29,24 +31,59 @@ function addHosts(connectionObjects) {
         tr.appendChild(tdHost)
 
         let tdPort = document.createElement("td")
-        tdPort.innerHTML = connection.port|| 27017
+        tdPort.innerHTML = connection.port
         tr.appendChild(tdPort)
 
         let tdUName = document.createElement("td")
-        tdUName.innerHTML = connection.username||''
+        tdUName.innerHTML = connection.username || ''
         tr.appendChild(tdUName)
 
         let pwd = document.createElement("td")
-        pwd.innerHTML = connection.password||''
+        let dummyPwd='';
+        if(connection.password){
+            for(let i=0;i<connection.password.length;i++){
+                dummyPwd+='*';
+            }
+        }
+        pwd.innerHTML = dummyPwd|| ''
         tr.appendChild(pwd)
 
+
         let action = document.createElement("td")
-        let button= document.createElement('button');
-        button.innerHTML=('connect')
-        button.addEventListener('click',()=>{
+        let connectButton = document.createElement('button');
+        connectButton.innerHTML = ('connect')
+        connectButton.addEventListener('click', () => {
             connectServer(connection)
         })
-        action.append(button);
+
+        let deleteIcon = document.createElement('i');
+        deleteIcon.classList.add('material-icons');
+        deleteIcon.classList.add('actionIcon');
+        deleteIcon.classList.add('actionIconDelete');
+        deleteIcon.classList.add('mongoIEDicon');
+        deleteIcon.innerHTML = 'delete_sweep';
+        deleteIcon.addEventListener('click', () => {
+            deleteConnection(connection)
+        })
+
+
+
+        let editIcon = document.createElement('i');
+        editIcon.classList.add('material-icons');
+        editIcon.classList.add('actionIcon');
+        editIcon.classList.add('actionIconEdit');
+        editIcon.classList.add('mongoIEDicon');
+        editIcon.innerHTML = 'build';
+
+
+
+        let actionContainerDiv = document.createElement('div');
+        actionContainerDiv.classList.add('actionContainerDiv');
+        actionContainerDiv.append(connectButton);
+        actionContainerDiv.append(editIcon);
+        actionContainerDiv.append(deleteIcon);
+
+        action.append(actionContainerDiv);
         tr.appendChild(action)
 
         tableBody.appendChild(tr)
@@ -55,7 +92,59 @@ function addHosts(connectionObjects) {
 }
 
 
-
 function connectServer(conObj) {
     electron.ipcRenderer.send("item:connect", conObj)
 }
+
+function addConnection() {
+    let connectionName = document.querySelector("#connectionName").value || 'New Connection';
+    const host = document.querySelector("#host").value || 'loaclhost';
+    const port = document.querySelector("#port").value || 27017
+    const uname = document.querySelector("#uname").value;
+    const pwd = document.querySelector("#pwd").value;
+
+
+    if (allConnections != null && allConnections.length>0) {
+       let index=0;
+       let orgConName=connectionName;
+        while (true) {
+            let matched = false;
+            for (let connection of allConnections) {
+                if (connection.name.trim().toLowerCase() == connectionName.trim().toLowerCase()) {
+                    matched = true;
+                    break;
+                }
+            }
+            if(matched){
+                index++;
+                connectionName=orgConName+' '+index;
+               
+            }else{
+                break;
+            }
+        }
+
+    }
+
+    const connectionDetails = {
+        host: host.trim(),
+        port,
+        name: connectionName.trim(),
+        username: uname,
+        password: pwd
+    }
+    // electron.ipcRenderer.send('item:host',hostDetails)
+    electron.ipcRenderer.send('storage:addNewConnection', connectionDetails);
+    electron.ipcRenderer.send("storage:getAllConnections", {})
+}
+
+function deleteConnection(connObj){
+    electron.ipcRenderer.send('storage:deleteConnection',connObj);
+}
+function init() {
+    document.querySelector('#addNewConnectionBtn').addEventListener('click', addConnection)
+}
+
+window.addEventListener('load', _ => {
+    init();
+})

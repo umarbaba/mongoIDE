@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Connections</title>
     <script src="connect.js"></script>
+    <link rel="stylesheet" href="../../assets/icon/icons-and-font.css">
     <link rel="stylesheet" href="connect.css">
 </head>
 
@@ -28,8 +29,34 @@
         </tbody>
     </table>
 
-    <div>
-        <!-- <button onclick="connectServer()">Connect</button> -->
+    <div class="addNewOrEdit" >
+     <div class="formGroup">
+         <label for="connectionName">Connection name</label>
+         <input type="text" id="connectionName" placeholder="New Connection .">
+     </div>
+     <div class="splitAuto">
+        <div class="formGroup">
+            <label for="host">Host</label>
+            <input type="text" id="host" placeholder="loaclhost">
+        </div>
+        <div class="formGroup">
+            <label for="port">Port</label>
+            <input type="number" id="port" min="0" max="65535" placeholder="27017">
+        </div>
+     </div>
+     <div class="splitAuto splitEqual">
+        <div class="formGroup">
+            <label for="uname">User Name</label>
+            <input type="text" id="uname">
+        </div>
+        <div class="formGroup">
+            <label for="pwd">Password</label>
+            <input type="text" id="pwd">
+        </div>
+     </div>
+     <div class="rightAlignContent">
+         <button id="addNewConnectionBtn">Add new</button>
+     </div>
     </div>
    
 </body>

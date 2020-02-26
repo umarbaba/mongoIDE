@@ -19,13 +19,13 @@ function createWindow() {
     }
   })
   mainWindow.loadFile('src/dashboard/index.html')
-/*   mainWindow.setThumbarButtons([
-    {
-      tooltip: 'connect',
-      icon: path.join(__dirname, 'connect2.png'),
-      click() { console.log('button1 clicked') }
-    }
-  ]) */
+  /*   mainWindow.setThumbarButtons([
+      {
+        tooltip: 'connect',
+        icon: path.join(__dirname, 'connect2.png'),
+        click() { console.log('button1 clicked') }
+      }
+    ]) */
   mainWindow.on('closed', () => {
     app.quit()
   })
@@ -95,7 +95,7 @@ function createConnectWindow() {
   ]
   const menu = Menu.buildFromTemplate(connectMenuTemplate)
   connectWin.setMenu(menu)
-//  connectWin.webContents.openDevTools();
+  connectWin.webContents.openDevTools();
 
 }
 
@@ -107,10 +107,10 @@ ipcMain.on('item:host', (e, item) => {
 })
 
 
-ipcMain.on('item:connect', (event,connectDetails) => {
+ipcMain.on('item:connect', (event, connectDetails) => {
   dbBridge.setConnectDetails(connectDetails)
   businessLogic.getInitData().then(serverData => {
-    mainWindow.webContents.send('item:connect', {serverData,connectionName:connectDetails.name})
+    mainWindow.webContents.send('item:connect', { serverData, connectionName: connectDetails.name })
   })
   connectWin.close();
 
@@ -131,14 +131,17 @@ ipcMain.on('storage:addNewConnection', (e, conObj) => {
     })
   });
 })
-
-
-
-
 ipcMain.on('storage:getAllConnections', (e, conObj) => {
-  console.log('req received')
   storage.getAllConnections().then(conObjects => {
     connectWin.webContents.send('connect:updateHostList', conObjects)
+  })
+})
+
+ipcMain.on('storage:deleteConnection', (e, conObj) => {
+  storage.deleteConnection(conObj).then(_ => {
+    storage.getAllConnections().then(conObjects => {
+      connectWin.webContents.send('connect:updateHostList', conObjects)
+    })
   })
 })
 

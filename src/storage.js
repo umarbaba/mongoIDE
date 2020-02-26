@@ -9,6 +9,8 @@ function addNewConnection(conObj) {
             name: conObj.name,
             host: conObj.host,
             port: conObj.port,
+            username:conObj.username,
+            password:conObj.password,
             type: 'CONN_OBJ'
         };
         db.put(connObj, function callback(err, result) {
@@ -22,6 +24,21 @@ function addNewConnection(conObj) {
     })
 
 }
+
+function deleteConnection(connObj) {
+    /*   db.allDocs({ include_docs: true, descending: true }, function (err, doc) {
+          console.log(doc)
+          //  redrawTodosUI(doc.rows);
+      }); */
+    return new Promise((resolve, reject) => {
+        db.remove(connObj._id,connObj._rev).then(function (result) {
+            resolve(result)
+        }).catch(function (err) {
+            reject(err);
+        });
+    })
+}
+
 
 function getAllConnections() {
     /*   db.allDocs({ include_docs: true, descending: true }, function (err, doc) {
@@ -37,13 +54,11 @@ function getAllConnections() {
             reject(err);
         });
     })
-
-
 }
 
 
 
 
 module.exports = {
-    addNewConnection, getAllConnections
+    addNewConnection, getAllConnections,deleteConnection
 }
