@@ -109,13 +109,33 @@ button {
   grid-template-rows: auto 1fr;
 }
 .queryContainer {
-  height: 100px;
+  height: 140px;
   border-bottom: 1px solid #000;
+  background: black;
 }
 .queryContainer #query {
-  height: 100%;
+  height: 70%;
   width: 100%;
 }
 .collectionDetails #data{
     overflow: auto;
+}
+
+#data tr:nth-child(1) {
+    background: #d6ecff;
+}
+#data th {
+    padding: 5px 5px;
+    text-align: center;
+}
+#data td {
+    padding: 3px 5px;
+    text-align: center;
+}
+#data tr:nth-child(2n) {
+    background: #f5efef;
+}
+#data table {
+    border: 1px solid #e0dbdb;
+    padding: 3px 10px;
 }

@@ -6,8 +6,8 @@ function getInitData() {
         dbBridge.getAllDataBases().then(dbs => {
             console.log("Got the dbs")
             getCollectionsOfAllDBS(dbs).then(dbsWithCollections => {
-                
-                getServerStatus().then(serverStatus=>{
+
+                getServerStatus().then(serverStatus => {
                     resolve({
                         dbsWithCollections,
                         serverStatus
@@ -73,12 +73,15 @@ function getCollectionData(node) {
     })
 }
 
-function executeQuery(query){
+function executeQuery(query) {
     return new Promise((resolve, reject) => {
-        resolve(query)        
+        let currentdb = query.currentdb
+        dbBridge.executeQuery(currentdb,query.query).then(result => {
+            resolve({currentdb,result})
+        })
     })
 }
 
 module.exports = {
-    getInitData,getDbDetails,getCollectionData,executeQuery
+    getInitData, getDbDetails, getCollectionData, executeQuery
 }

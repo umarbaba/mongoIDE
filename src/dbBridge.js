@@ -34,6 +34,20 @@ function getDbStats(dbName) {
 }
 
 
+function executeQuery(dbName,query) {
+    return new Promise((resolve, reject) => {
+        connect().then(client => {
+            db = client.db(dbName);
+            let evalResult = eval(query)
+            getArray(evalResult).then(result => {
+                return resolve(result)
+            }).catch(err => {
+                return resolve(evalResult)
+            })     
+        })
+
+    })
+}
 
 function executeDbAdminCommand(query, dbName = 'admin') {
     return new Promise((resolve, reject) => {
@@ -79,7 +93,7 @@ function getArray(iterator) {
 function connect() {
     return new Promise(async (resolve, reject) => {
 
-        if (client == null && connectionDetails!=null) {
+        if (client == null && connectionDetails != null) {
             host = connectionDetails.host;
             port = connectionDetails.port;
 
@@ -117,5 +131,12 @@ function setConnectDetails(conDetails) {
 }
 
 module.exports = {
-    connect, getAllDataBases, getCollections, executeDbAdminCommand, getDbStats, setConnectDetails,getCollectionData
+    connect,
+    getAllDataBases,
+    getCollections,
+    executeDbAdminCommand,
+    getDbStats,
+    setConnectDetails,
+    getCollectionData,
+    executeQuery
 }

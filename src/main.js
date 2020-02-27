@@ -8,6 +8,7 @@ const storage = require('./storage');
 let mainWindow;
 let hostWin;
 let connectWin;
+let errorWin;
 
 function createWindow() {
   // Create the browser window.
@@ -72,6 +73,21 @@ function CreateHostAddWindow() {
 
 }
 
+function createErrorWindow() {
+  return new Promise((resolve, reject) => {
+    errorWin = new BrowserWindow({
+      width: 400,
+      height: 200,
+      webPreferences: {
+        nodeIntegration: true
+      }
+    })
+    errorWin.loadFile('src/error-window/error.html')
+    errorWin.setTitle("Error");
+    errorWin.removeMenu();
+    resolve()
+  })
+}
 function createConnectWindow() {
   connectWin = new BrowserWindow({
     width: electron.screen.getPrimaryDisplay().workAreaSize.width-200,
@@ -142,11 +158,21 @@ ipcMain.on('storage:addNewConnection', (e, conObj) => {
 })
 
 ipcMain.on('item:query', (e, query) => {
-  businessLogic.executeQuery(query).then(result=>{
-    mainWindow.webContents.send('main:queryResult',result)
+  businessLogic.executeQuery(query).then(result => {
+    mainWindow.webContents.send('main:queryResult', result)
   })
 })
 
+
+ipcMain.on('error:invalid', (e, message) => {
+  createErrorWindow().then(()=>{
+    errorWin.webContents.openDevTools();
+    setTimeout(_=>{
+      errorWin.webContents.send("item:invalid", message)
+    },1000)
+   
+  })
+})
 
 
 ipcMain.on('storage:getAllConnections', (e, conObj) => {

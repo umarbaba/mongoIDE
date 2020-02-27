@@ -48,6 +48,8 @@
   },
   "dependencies": {
     "electron-tree-view": "^1.1.0",
+    "jquery": "^3.4.1",
+    "jquery.json-viewer": "^1.4.0",
     "monaco-editor": "^0.20.0",
     "mongodb": "^3.5.3",
     "path": "^0.12.7",
