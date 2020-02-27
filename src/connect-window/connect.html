@@ -11,54 +11,59 @@
 </head>
 
 <body>
-    <h3>Saved Connections</h3>
+    <div class="container">
+        <div class="tableContainer">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Connection Name</th>
+                        <th>Host</th>
+                        <th>Port</th>
+                        <th>User Name</th>
+                        <th>Password </th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="connectionTableBody">
+        
+                </tbody>
+            </table>
+        </div>
+    
+        <div class="addNewOrEdit">
+            <div class="formGroup">
+                <label for="connectionName">Connection name</label>
+                <input type="text" id="connectionName" placeholder="New Connection .">
+            </div>
+            <div class="splitAuto">
+                <div class="formGroup">
+                    <label for="host">Host</label>
+                    <input type="text" id="host" placeholder="loaclhost">
+                </div>
+                <div class="formGroup">
+                    <label for="port">Port</label>
+                    <input type="number" id="port" min="0" max="65535" placeholder="27017">
+                </div>
+            </div>
+            <div class="splitAuto splitEqual">
+                <div class="formGroup">
+                    <label for="uname">User Name</label>
+                    <input type="text" id="uname">
+                </div>
+                <div class="formGroup">
+                    <label for="pwd">Password</label>
+                    <input type="text" id="pwd">
+                </div>
+            </div>
+            <div class="rightAlignContent">
+                <button id="cancelUpdateBtn" class="hideBtn">Cancel</button>
+                <button id="addNewConnectionBtn">Add new</button>
+                <button id="updateConnectionBtn" class="hideBtn">Update Connection</button>
+            </div>
+        </div>
+    </div>   
+    
 
-    <table>
-        <thead>
-            <tr>
-               <th>Connection Name</th>
-               <th>Host</th>
-               <th>Port</th>
-               <th>User Name</th>
-               <th>Password </th>
-               <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="connectionTableBody">
-
-        </tbody>
-    </table>
-
-    <div class="addNewOrEdit" >
-     <div class="formGroup">
-         <label for="connectionName">Connection name</label>
-         <input type="text" id="connectionName" placeholder="New Connection .">
-     </div>
-     <div class="splitAuto">
-        <div class="formGroup">
-            <label for="host">Host</label>
-            <input type="text" id="host" placeholder="loaclhost">
-        </div>
-        <div class="formGroup">
-            <label for="port">Port</label>
-            <input type="number" id="port" min="0" max="65535" placeholder="27017">
-        </div>
-     </div>
-     <div class="splitAuto splitEqual">
-        <div class="formGroup">
-            <label for="uname">User Name</label>
-            <input type="text" id="uname">
-        </div>
-        <div class="formGroup">
-            <label for="pwd">Password</label>
-            <input type="text" id="pwd">
-        </div>
-     </div>
-     <div class="rightAlignContent">
-         <button id="addNewConnectionBtn">Add new</button>
-     </div>
-    </div>
-   
 </body>
 
 </html>

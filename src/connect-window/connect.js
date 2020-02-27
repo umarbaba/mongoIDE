@@ -39,13 +39,13 @@ function addHosts(connectionObjects) {
         tr.appendChild(tdUName)
 
         let pwd = document.createElement("td")
-        let dummyPwd='';
-        if(connection.password){
-            for(let i=0;i<connection.password.length;i++){
-                dummyPwd+='*';
+        let dummyPwd = '';
+        if (connection.password) {
+            for (let i = 0; i < connection.password.length; i++) {
+                dummyPwd += '*';
             }
         }
-        pwd.innerHTML = dummyPwd|| ''
+        pwd.innerHTML = dummyPwd || ''
         tr.appendChild(pwd)
 
 
@@ -74,6 +74,9 @@ function addHosts(connectionObjects) {
         editIcon.classList.add('actionIconEdit');
         editIcon.classList.add('mongoIEDicon');
         editIcon.innerHTML = 'build';
+        editIcon.addEventListener('click', () => {
+            editConnection(connection)
+        })
 
 
 
@@ -96,6 +99,28 @@ function connectServer(conObj) {
     electron.ipcRenderer.send("item:connect", conObj)
 }
 
+
+
+function editConnection(connection) {
+    document.querySelector('#addNewConnectionBtn').classList.add('hideBtn');
+    document.querySelector('#cancelUpdateBtn').classList.remove('hideBtn');
+
+    document.querySelector("#connectionName").value = connection.name || 'New Connection';
+    document.querySelector('#updateConnectionBtn').classList.remove('hideBtn');
+    document.querySelector("#host").value = connection.host || 'loaclhost';
+    document.querySelector("#port").value = connection.port  || 27017
+    document.querySelector("#uname").value = connection.username||''  
+    document.querySelector("#pwd").value = connection.password  ||'';
+    document.querySelector('#updateConnectionBtn').addEventListener('click', ()=>{
+        deleteConnection(connection);
+        addConnection();
+        document.querySelector('#addNewConnectionBtn').classList.remove('hideBtn');
+        document.querySelector('#updateConnectionBtn').classList.add('hideBtn');
+        document.querySelector('#cancelUpdateBtn').classList.add('hideBtn');
+    } )
+}
+
+
 function addConnection() {
     let connectionName = document.querySelector("#connectionName").value || 'New Connection';
     const host = document.querySelector("#host").value || 'loaclhost';
@@ -104,9 +129,9 @@ function addConnection() {
     const pwd = document.querySelector("#pwd").value;
 
 
-    if (allConnections != null && allConnections.length>0) {
-       let index=0;
-       let orgConName=connectionName;
+    if (allConnections != null && allConnections.length > 0) {
+        let index = 0;
+        let orgConName = connectionName;
         while (true) {
             let matched = false;
             for (let connection of allConnections) {
@@ -115,11 +140,11 @@ function addConnection() {
                     break;
                 }
             }
-            if(matched){
+            if (matched) {
                 index++;
-                connectionName=orgConName+' '+index;
-               
-            }else{
+                connectionName = orgConName + ' ' + index;
+
+            } else {
                 break;
             }
         }
@@ -136,13 +161,29 @@ function addConnection() {
     // electron.ipcRenderer.send('item:host',hostDetails)
     electron.ipcRenderer.send('storage:addNewConnection', connectionDetails);
     electron.ipcRenderer.send("storage:getAllConnections", {})
+    connectionFormReset();
 }
 
-function deleteConnection(connObj){
-    electron.ipcRenderer.send('storage:deleteConnection',connObj);
+function deleteConnection(connObj) {
+    electron.ipcRenderer.send('storage:deleteConnection', connObj);
+}
+function connectionFormReset(){
+    document.querySelector("#connectionName").value = '';
+    document.querySelector("#host").value ='';
+    document.querySelector("#port").value = '';
+    document.querySelector("#uname").value = '';
+    document.querySelector("#pwd").value = '';
 }
 function init() {
     document.querySelector('#addNewConnectionBtn').addEventListener('click', addConnection)
+    document.querySelector('#cancelUpdateBtn').addEventListener('click', (event)=>{
+        event.target.classList.add('hideBtn');
+        document.querySelector('#addNewConnectionBtn').classList.remove('hideBtn');
+        document.querySelector('#updateConnectionBtn').classList.add('hideBtn');
+        connectionFormReset();
+    })
+
+    
 }
 
 window.addEventListener('load', _ => {

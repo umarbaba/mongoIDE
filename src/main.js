@@ -12,8 +12,8 @@ let connectWin;
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: electron.screen.getPrimaryDisplay().workAreaSize.width-100,
+    height: electron.screen.getPrimaryDisplay().workAreaSize.height-100,
     webPreferences: {
       nodeIntegration: true
     }
@@ -74,14 +74,16 @@ function CreateHostAddWindow() {
 
 function createConnectWindow() {
   connectWin = new BrowserWindow({
-    width: 700,
-    height: 600,
+    width: electron.screen.getPrimaryDisplay().workAreaSize.width-200,
+    height: electron.screen.getPrimaryDisplay().workAreaSize.height-200,
     webPreferences: {
       nodeIntegration: true
     }
   })
-  connectWin.loadFile('src/connect-window/connect.html')
-  connectWin.setTitle("Connect");
+  connectWin.loadFile('src/connect-window/connect.html');
+  connectWin.removeMenu();
+  connectWin.setAlwaysOnTop('true');
+/*   connectWin.setTitle("Connect");
   const connectMenuTemplate = [
     {
       label: "Create",
@@ -94,9 +96,9 @@ function createConnectWindow() {
     }
   ]
   const menu = Menu.buildFromTemplate(connectMenuTemplate)
-  connectWin.setMenu(menu)
+  connectWin.setMenu(menu) */
   //  connectWin.webContents.openDevTools();
-  //connectWin.webContents.openDevTools();
+ // connectWin.webContents.openDevTools();
 
 }
 
