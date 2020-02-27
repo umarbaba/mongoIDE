@@ -5,8 +5,14 @@
   <meta charset="UTF-8">
   <title>mongo_studio!</title>
   <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
-  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <script src="../../node_modules/jquery.json-viewer/json-viewer/jquery.json-viewer.js"></script>
+
   <script src="index.js"></script>
+
+  <link rel="stylesheet" href="../../node_modules/jquery.json-viewer/json-viewer/jquery.json-viewer.css">
   <link rel="stylesheet" href="index.css">
 </head>
 
@@ -54,11 +60,13 @@
         </div>
       </div>
 
-      <div class="collectionDetails" >
+      <div class="collectionDetails">
         <div class="queryContainer">
           <div id="query">
           </div>
-         
+          <div class="tools">
+            <button onClick="runQuery()">Run</button>
+          </div>
 
         </div>
         <div id="data">

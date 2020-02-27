@@ -1,9 +1,7 @@
 const electron = require('electron');
-
-const tree = require('electron-tree-view')
-
 let sideBarTree = {}
 var editor = null
+let currentdb = null
 
 electron.ipcRenderer.on("item:connect", (e, serverDetails) => {
     displayTree(serverDetails.serverData.dbsWithCollections, serverDetails.connectionName)
@@ -16,12 +14,23 @@ electron.ipcRenderer.on("item:dbDetails", (e, dbDetails) => {
 
 electron.ipcRenderer.on("item:collectionData", (e, collectionData) => {
     console.log(collectionData)
+    currentdb = collectionData.node.dbName;
     displayEditor(collectionData.node)
     displayTable(collectionData.collectionData)
 })
 
-electron.ipcRenderer.on('main:queryResult',(e, result)=>{
+electron.ipcRenderer.on('main:queryResult', (e, result) => {
     console.log(result);
+    if (Array.isArray(result.result)) {
+        displayTable(result.result)
+    }
+    else {
+        //displayJson.call(this,result.result);
+        //displayJson(result.result)
+        let result = []
+        result.push(result.result)
+        displayTable(result.result)
+    }
 })
 
 
@@ -32,6 +41,7 @@ function displayTree(treeData, connectionName) {
 
     treeData.forEach(db => {
         let dbName = db.dbName;
+
         let collectionArray = []
         db.collections.forEach(collection => {
             let collectionName = collection.s.namespace.collection
@@ -137,14 +147,21 @@ function displayEditor(data) {
             });
         }
         else {
-            editor.value = "db.collection('" + data.name + "').find({})"
+            editor.setValue("db.collection('" + data.name + "').find({})")
         }
     });
 }
 
+function displayJson(result) {
+    let data = document.getElementById("data")
+    console.log('here', $)
+    data.innerHTML = ""
+    $('#data').jsonViewer(result)
+}
 
 function displayTable(collectionData) {
     let data = document.getElementById("data")
+
     data.innerHTML = ""
     let table = document.createElement("table")
     let tr = document.createElement("tr")
@@ -162,7 +179,17 @@ function displayTable(collectionData) {
         tr = document.createElement("tr")
         Object.keys(entry).forEach(function (key) {
             let td = document.createElement("td")
-            td.innerText = entry[key];
+            if (key == '_id') {
+                td.innerText = entry[key].id.map(eachNo => {
+                    return eachNo.toString(16)
+                }).reduce((accu, sec) => {
+                    return accu + sec
+                })
+            }
+            else {
+                td.innerText = (entry[key])
+
+            }
             tr.appendChild(td)
         });
         table.appendChild(tr)
@@ -170,9 +197,14 @@ function displayTable(collectionData) {
     data.appendChild(table)
 }
 
-function runQuery(){
-    let query= editor.value;
-    
-    electron.ipcRenderer.send("item:query",query)
+function runQuery() {
+    let query = editor.getValue();
 
+    if (query.startsWith("db.")) {
+        electron.ipcRenderer.send("item:query", { currentdb, query })
+    }
+    else {
+        let message = "Query should start with 'db' object \n e.g db.collection('collectionName').find({})"
+        electron.ipcRenderer.send("error:invalid", message);
+    }
 }

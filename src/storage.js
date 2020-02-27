@@ -37,8 +37,6 @@ function getAllConnections() {
             reject(err);
         });
     })
-
-
 }
 
 
