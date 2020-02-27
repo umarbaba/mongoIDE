@@ -34,7 +34,7 @@ function createWindow() {
     mainWindow.show()
     mainWindow.focus()
   })
-  mainWindow.webContents.openDevTools()
+ // mainWindow.webContents.openDevTools()
 }
 app.whenReady().then(() => {
   createWindow()
@@ -112,6 +112,7 @@ function createConnectWindow() {
   const menu = Menu.buildFromTemplate(connectMenuTemplate)
   connectWin.setMenu(menu)
   //  connectWin.webContents.openDevTools();
+  //connectWin.webContents.openDevTools();
 
 }
 
@@ -148,7 +149,6 @@ ipcMain.on('item:getCollectionData', (e, node) => {
 
 ipcMain.on('storage:addNewConnection', (e, conObj) => {
   storage.addNewConnection(conObj).then(_ => {
-    hostWin.close();
     storage.getAllConnections().then(conObjects => {
       connectWin.webContents.send('connect:updateHostList', conObjects)
     })
@@ -174,9 +174,16 @@ ipcMain.on('error:invalid', (e, message) => {
 
 
 ipcMain.on('storage:getAllConnections', (e, conObj) => {
-  console.log('req received')
   storage.getAllConnections().then(conObjects => {
     connectWin.webContents.send('connect:updateHostList', conObjects)
+  })
+})
+
+ipcMain.on('storage:deleteConnection', (e, conObj) => {
+  storage.deleteConnection(conObj).then(_ => {
+    storage.getAllConnections().then(conObjects => {
+      connectWin.webContents.send('connect:updateHostList', conObjects)
+    })
   })
 })
 

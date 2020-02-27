@@ -1,3 +1,6 @@
+
+
+
 table {
     width: 100%;
     border-spacing: 0;
@@ -29,3 +32,55 @@ thead th {
     color: #545454;
 }
 
+
+
+.actionContainerDiv {
+    /* background: aliceblue; */
+    padding: 10px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.actionIcon {
+    padding: 4px 8px;
+}
+
+.actionIconEdit {
+    font-size: 1.2rem;
+}
+
+.addNewOrEdit {
+    border: 1px solid #eaeaea;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+label {
+    display: inherit;
+}
+
+input {
+    width: 100%;
+    padding: 5px 10px;
+    box-sizing: border-box;
+    border: 1px solid #b0adad;
+    border-radius: 2px;
+}
+
+.splitAuto {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-gap: 10px;
+    /* justify-content: flex-start; */
+    padding: 10px 0;
+}
+.splitEqual{
+    grid-template-columns: 1fr 1fr;
+}
+
+.rightAlignContent {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
