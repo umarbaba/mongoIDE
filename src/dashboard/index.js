@@ -180,11 +180,8 @@ function displayTable(collectionData) {
         Object.keys(entry).forEach(function (key) {
             let td = document.createElement("td")
             if (key == '_id') {
-                td.innerText = entry[key].id.map(eachNo => {
-                    return eachNo.toString(16)
-                }).reduce((accu, sec) => {
-                    return accu + sec
-                })
+                let innerText = entry[key].id.toString().split(',').map(num=> {return parseInt(num).toString(16)}).reduce((x,y)=>{return x+y})
+                td.innerText = "ObjectId(\""+innerText+"\")";
             }
             else {
                 td.innerText = (entry[key])
