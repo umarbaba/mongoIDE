@@ -34,7 +34,7 @@ function createWindow() {
     mainWindow.show()
     mainWindow.focus()
   })
- // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 }
 app.whenReady().then(() => {
   createWindow()
@@ -158,6 +158,14 @@ ipcMain.on('storage:addNewConnection', (e, conObj) => {
 ipcMain.on('item:query', (e, query) => {
   businessLogic.executeQuery(query).then(result => {
     mainWindow.webContents.send('main:queryResult', result)
+  }).catch(err=>{
+    createErrorWindow().then(()=>{
+      setTimeout(_=>{
+        errorWin.webContents.send("item:invalid", err)
+      },500)
+     
+    })
+
   })
 })
 
@@ -167,7 +175,7 @@ ipcMain.on('error:invalid', (e, message) => {
     errorWin.webContents.openDevTools();
     setTimeout(_=>{
       errorWin.webContents.send("item:invalid", message)
-    },1000)
+    },500)
    
   })
 })

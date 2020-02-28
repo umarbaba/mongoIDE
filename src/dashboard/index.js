@@ -3,6 +3,8 @@ let sideBarTree = {}
 var editor = null
 let currentdb = null
 
+let $ = require('../../node_modules/jquery/dist/jquery.min.js')
+
 electron.ipcRenderer.on("item:connect", (e, serverDetails) => {
     displayTree(serverDetails.serverData.dbsWithCollections, serverDetails.connectionName)
     populateServerStatus(serverDetails.serverData.serverStatus)
@@ -22,14 +24,19 @@ electron.ipcRenderer.on("item:collectionData", (e, collectionData) => {
 electron.ipcRenderer.on('main:queryResult', (e, result) => {
     console.log(result);
     if (Array.isArray(result.result)) {
-        displayTable(result.result)
+        if(result.result.length==0){
+            displayMessage();
+        }
+        else{
+            displayTable(result.result)
+        }
     }
     else {
         //displayJson.call(this,result.result);
         //displayJson(result.result)
-        let result = []
-        result.push(result.result)
-        displayTable(result.result)
+        let res = []
+        res.push(result.result.result)
+        displayTable(res)
     }
 })
 
@@ -152,11 +159,10 @@ function displayEditor(data) {
     });
 }
 
-function displayJson(result) {
+function displayMessage(){
     let data = document.getElementById("data")
-    console.log('here', $)
-    data.innerHTML = ""
-    $('#data').jsonViewer(result)
+    data.innerHTML = "No records found"
+
 }
 
 function displayTable(collectionData) {

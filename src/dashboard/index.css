@@ -5,9 +5,10 @@ body {
 }
 .container {
   display: grid;
-  width: 100%;
-  height: calc(100vh - 25px);
+  width: 100vw;
+  height: 100vh;
   grid-template-columns: auto 1fr;
+  overflow: hidden;
 }
 .sidebar {
   padding: 20px;
@@ -16,7 +17,9 @@ body {
   border: 1px solid #bdb9b9;
 }
 .mainData {
-  border: 1px solid #bdb9b9;
+  border: 1px solid #ada9a9;
+  height: 100vh;
+
 }
 
 .mainData .container {
@@ -103,7 +106,6 @@ button {
   cursor: pointer;
 }
 .collectionDetails {
-  width: 100%;
   height: 100%;
   display: grid;
   grid-template-rows: auto 1fr;
@@ -117,6 +119,18 @@ button {
   height: 70%;
   width: 100%;
 }
+.queryContainer button {
+  min-width: 80px;
+  min-height: 35px;
+  margin: 4px 4px 4px 14px;
+  display: flex;
+  align-items: center;
+}
+.queryContainer button i{  
+  color: #1cad1c;
+  font-size: 33px;
+}
+
 .collectionDetails #data{
     overflow: auto;
 }
