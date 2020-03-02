@@ -99,7 +99,7 @@ function connect() {
             host = connectionDetails.host;
             port = connectionDetails.port;
 
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 1; i++) {
                 try {
                     console.log('Initiating DB connection....')
                     client = await mongoClient.connect(`mongodb://${host}:${port}`, {

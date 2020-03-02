@@ -127,6 +127,7 @@ ipcMain.on('item:host', (e, item) => {
 
 
 ipcMain.on('item:connect', (event, connectDetails) => {
+  mainWindow.webContents.send('db:connectionStarted', { connectDetails })
   dbBridge.setConnectDetails(connectDetails)
   businessLogic.getInitData().then(serverData => {
     mainWindow.webContents.send('item:connect', { serverData, connectionName: connectDetails.name })

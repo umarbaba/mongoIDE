@@ -107,7 +107,7 @@ function editConnection(connection) {
 
     document.querySelector("#connectionName").value = connection.name || 'New Connection';
     document.querySelector('#updateConnectionBtn').classList.remove('hideBtn');
-    document.querySelector("#host").value = connection.host || 'loaclhost';
+    document.querySelector("#host").value = connection.host || 'localhost';
     document.querySelector("#port").value = connection.port  || 27017
     document.querySelector("#uname").value = connection.username||''  
     document.querySelector("#pwd").value = connection.password  ||'';
@@ -123,7 +123,7 @@ function editConnection(connection) {
 
 function addConnection() {
     let connectionName = document.querySelector("#connectionName").value || 'New Connection';
-    const host = document.querySelector("#host").value || 'loaclhost';
+    const host = document.querySelector("#host").value || 'localhost';
     const port = document.querySelector("#port").value || 27017
     const uname = document.querySelector("#uname").value;
     const pwd = document.querySelector("#pwd").value;

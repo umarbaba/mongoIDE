@@ -6,8 +6,13 @@ let currentdb = null
 let $ = require('../../node_modules/jquery/dist/jquery.min.js')
 
 electron.ipcRenderer.on("item:connect", (e, serverDetails) => {
+    hideLoader();
     displayTree(serverDetails.serverData.dbsWithCollections, serverDetails.connectionName)
     populateServerStatus(serverDetails.serverData.serverStatus)
+})
+
+electron.ipcRenderer.on("db:connectionStarted", (e) => {
+    showLoader();
 })
 
 electron.ipcRenderer.on("item:dbDetails", (e, dbDetails) => {
@@ -146,7 +151,11 @@ function displayEditor(data) {
             editor = monaco.editor.create(document.getElementById('query'), {
                 value: "db.collection(\'" + data.name + "\').find({})",
                 language: 'javascript',
-                lineNumbers: "off",
+                minimap: {
+                    enabled: false
+                },
+                automaticLayout: true,
+                lineNumbers: "on",
                 roundedSelection: false,
                 scrollBeyondLastLine: false,
                 readOnly: false,
