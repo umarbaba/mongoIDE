@@ -78,6 +78,8 @@ function executeQuery(query) {
         let currentdb = query.currentdb
         dbBridge.executeQuery(currentdb,query.query).then(result => {
             resolve({currentdb,result})
+        }).catch(err=>{
+            reject(err)
         })
     })
 }

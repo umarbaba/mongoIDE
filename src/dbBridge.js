@@ -34,7 +34,7 @@ function getDbStats(dbName) {
 }
 
 
-function executeQuery(dbName,query) {
+function executeQuery(dbName, query) {
     return new Promise((resolve, reject) => {
         connect().then(client => {
             db = client.db(dbName);
@@ -43,7 +43,9 @@ function executeQuery(dbName,query) {
                 return resolve(result)
             }).catch(err => {
                 return resolve(evalResult)
-            })     
+            })
+        }).catch(error=>{
+            return reject(error.message)
         })
 
     })
@@ -63,7 +65,7 @@ function executeDbAdminCommand(query, dbName = 'admin') {
 function getCollectionData(dbName, collectionName, query = {}, projection = undefined) {
     return new Promise((resolve, reject) => {
         connect().then(client => {
-            let result = client.db(dbName).collection(collectionName).find(query);
+            let result = client.db(dbName).collection(collectionName).find(query, { _id: {$toString: "$_id"}});
             if (projection != undefined) {
                 result = result.project(projection)
             }
@@ -116,7 +118,6 @@ function connect() {
                     } else {
                         return reject(null)
                     }
-
                 }
             }
         }
