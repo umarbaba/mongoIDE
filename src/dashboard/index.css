@@ -8,14 +8,14 @@ body {
   display: grid;
   width: 100vw;
   height: 100vh;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto auto 1fr;
   overflow: hidden;
 }
 
 .sidebar {
   padding: 20px;
-  background: #4CAF50;
-  min-width: 350px;
+  background: #a3d0ff91;
+  min-width: 300px;
   border: 1px solid #bdb9b9;
   overflow: auto;
 }
@@ -23,6 +23,7 @@ body {
 .mainData {
   border: 1px solid #ada9a9;
   height: 100vh;
+  min-width: 100px;
 
 }
 
@@ -113,20 +114,25 @@ button {
 .collectionDetails {
   height: 100%;
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto auto 1fr;
 }
 
 .queryContainer {
   height: 200px;
   /* border-bottom: 1px solid #000; */
-  background: #2b2b2b;
+  background: #211e1e;
   display: grid;
   grid-template-rows: 1fr auto;
+  overflow: hidden;
+  width: 100%;
 }
 
 .queryContainer #query {
   height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
+
 
 .queryContainer button {
   display: flex;
@@ -181,4 +187,30 @@ button {
   justify-content: flex-end;
   align-items: center;
   padding: 2px;
+}
+
+
+
+.dragHorizontal{
+  width: 3px;
+  background: #9a9494;
+  cursor: w-resize;
+}
+.verticalDrag{
+  height: 3px;
+  background: #9a9494;
+  cursor: n-resize;
+  position: relative;
+}
+.twoWayDrag {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  transform: translate(-50%, -50%);
+  cursor: all-scroll;
+  background: #736e6e;
+  border-radius: 50%;
+}
+.twoWayDrag:active{
+  background: #2196F3;
 }

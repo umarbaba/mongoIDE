@@ -5,6 +5,71 @@ let currentdb = null
 
 let $ = require('../../node_modules/jquery/dist/jquery.min.js')
 
+window.addEventListener('load', () => {
+    let resizeHor = false
+    let resizeVirtical = false
+    let resize = false
+    let sidebar = document.querySelector(".sidebar");
+    let queryContainer = document.querySelector(".queryContainer")
+
+    document.querySelector(".dragHorizontal").addEventListener("mousedown", function (e) {
+        resizeHor = true;
+        resize = true;
+        addEventListener()
+    })
+    document.querySelector(".verticalDrag").addEventListener("mousedown", function (e) {
+        resizeVirtical = true;
+        resize = true;
+        addEventListener()
+
+    })
+    document.querySelector(".twoWayDrag").addEventListener("mousedown", function (e) {
+        e.stopPropagation()
+        resizeHor = true;
+        resizeVirtical = true;
+        resize = true;
+        addEventListener()
+
+
+    })
+    function resizecontainers(event){
+        console.log("mouse move event triggered");
+        if (resize) {
+            if (resizeHor == true && resizeVirtical == true) {
+                sidebar.style.width = event.x + "px";
+                queryContainer.style.height = event.y + "px"
+            }
+            else if (resizeHor == true) {
+                sidebar.style.width = event.x + "px"
+            }
+            else if (resizeVirtical == true) {
+                queryContainer.style.height = event.y + "px"
+            }
+        }
+    }
+    function addEventListener(){
+        document.addEventListener("mousemove", resizecontainers)
+    }
+    
+    document.addEventListener("mouseup", function (e) {
+        console.log("mouse up event has triggered");
+        resizeHor = false;
+        resizeVirtical = false
+        resize = false;
+        if (editor) {
+            editor.layout();
+        }
+        document.removeEventListener("mousemove", resizecontainers)
+    })
+})
+
+
+window.addEventListener('resize', _ => {
+    if (editor) {
+        editor.layout();
+    }
+})
+
 electron.ipcRenderer.on("item:connect", (e, serverDetails) => {
     hideLoader();
     displayTree(serverDetails.serverData.dbsWithCollections, serverDetails.connectionName)
@@ -29,10 +94,10 @@ electron.ipcRenderer.on("item:collectionData", (e, collectionData) => {
 electron.ipcRenderer.on('main:queryResult', (e, result) => {
     console.log(result);
     if (Array.isArray(result.result)) {
-        if(result.result.length==0){
+        if (result.result.length == 0) {
             displayMessage();
         }
-        else{
+        else {
             displayTable(result.result)
         }
     }
@@ -168,7 +233,7 @@ function displayEditor(data) {
     });
 }
 
-function displayMessage(){
+function displayMessage() {
     let data = document.getElementById("data")
     data.innerHTML = "No records found"
 
@@ -195,8 +260,8 @@ function displayTable(collectionData) {
         Object.keys(entry).forEach(function (key) {
             let td = document.createElement("td")
             if (key == '_id') {
-                let innerText = entry[key].id.toString().split(',').map(num=> {return parseInt(num).toString(16)}).reduce((x,y)=>{return x+y})
-                td.innerText = "ObjectId(\""+innerText+"\")";
+                let innerText = entry[key].id.toString().split(',').map(num => { return parseInt(num).toString(16) }).reduce((x, y) => { return x + y })
+                td.innerText = "ObjectId(\"" + innerText + "\")";
             }
             else {
                 td.innerText = (entry[key])

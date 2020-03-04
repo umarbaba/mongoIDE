@@ -34,7 +34,6 @@ function createWindow() {
     mainWindow.show()
     mainWindow.focus()
   })
-  mainWindow.webContents.openDevTools()
 }
 app.whenReady().then(() => {
   createWindow()
@@ -149,7 +148,6 @@ ipcMain.on('item:getCollectionData', (e, node) => {
   })
 })
 
-
 ipcMain.on('storage:addNewConnection', (e, conObj) => {
   storage.addNewConnection(conObj).then(_ => {
     storage.getAllConnections().then(conObjects => {
@@ -165,10 +163,8 @@ ipcMain.on('item:query', (e, query) => {
     createErrorWindow().then(()=>{
       setTimeout(_=>{
         errorWin.webContents.send("item:invalid", err)
-      },500)
-     
+      },500)     
     })
-
   })
 })
 
@@ -183,7 +179,6 @@ ipcMain.on('error:invalid', (e, message) => {
   })
 })
 
-
 ipcMain.on('storage:getAllConnections', (e, conObj) => {
   storage.getAllConnections().then(conObjects => {
     connectWin.webContents.send('connect:updateHostList', conObjects)
@@ -197,8 +192,6 @@ ipcMain.on('storage:deleteConnection', (e, conObj) => {
     })
   })
 })
-
-
 
 menuItemsTemplate = [
   {
@@ -215,6 +208,17 @@ menuItemsTemplate = [
         accelerator: process.platform == 'darwin' ? 'command+Q' : 'ctrl+Q',
         click() {
           app.quit();
+        }
+      }
+    ]
+  },
+  {
+    label :"Help",
+    submenu:[
+      {
+        label:'Dev Tools',
+        click(){
+          mainWindow.webContents.openDevTools();
         }
       }
     ]
