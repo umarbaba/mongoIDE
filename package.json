@@ -43,7 +43,7 @@
   "author": "umar/pranoy",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^8.0.1",
+    "electron": "^15.5.5",
     "electron-builder": "^20.44.4"
   },
   "dependencies": {
